@@ -4,11 +4,11 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 var methodOverride = require('method-override');
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
 var error = require('./middlewares/error');
 
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
 
 app.set('views', __dirname + '/views');
