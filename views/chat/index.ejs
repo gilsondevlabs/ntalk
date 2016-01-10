@@ -1,7 +1,7 @@
 <% include ../header %>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-	var socket = io('http://localhost:3000');
+	var socket = io.connect('http://localhost:3000');
 	socket.emit('join', '<%- sala %>');
 	socket.on('send-client', function(msg) {
 		var chat = document.getElementById('chat');
@@ -9,17 +9,24 @@
 	});
 
 	var enviar = function() {
-		var msg = document.getElementById('msg');
+		var msg = document.getElementById('mensagem');
 		socket.emit('send-server', msg.value);
+		msg.value = '';
+		msg.focus();
 	};
 </script>
 <header>
 	<h2>Ntalk - Chat</h2>
 </header>
-<section>
-<pre id="chat"></pre>
-<input type="text" id="msg" placeholder="Mensagem">
-<button onclick="enviar();">Enviar</button>
+<section class="row-fluid">
+  <div class="well span6 offset3">
+    <pre id="chat" class="pre-scrollable" style="width:auto;height:250px;"></pre>
+    <div class="input-append">
+      <input type="text" id="mensagem" class="input-xlarge" placeholder="Digite sua mensagem">
+      <button class="btn btn-success" onclick="enviar();">Enviar</button>
+      <a href="/contatos" class="btn btn-inverse">Sair do chat</a>
+    </div>
+  </div>
 </section>
 <% include ../exit %>
 <% include ../footer %>

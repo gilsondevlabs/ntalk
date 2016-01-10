@@ -1,8 +1,9 @@
 <% include ../header %>
-<header>
-	<h2>Ntalk - Agenda de contatos</h2>
+<header class="row-fluid text-center">
+  <h2>Ntalk - Agenda de contatos</h2>
 </header>
-<section>
+<section class="row-fluid">
+  <section class="span12">
 	<form action="/contato" method="post">
 		<input type="text" name="contato[nome]"
 		placeholder="Nome">
@@ -10,7 +11,7 @@
 		placeholder="E-mail">
 		<button type="submit">Cadastrar</button>
 	</form>
-	<table>
+    <table class="table well">
 		<thead>
 			<tr>
 				<th>Nome</th>
@@ -24,13 +25,17 @@
 					<td><%- contato.nome %></td>
 					<td><%- contato.email %></td>
 					<td>
-						<a href="/contato/<%- index %>">Detalhes</a>
+						<span id="notify_<%- contato.email %>" class="label">Offline</span>
+					</td>
+					<td>
+						<a href="/contato/<%- contato._id %>">Detalhes</a>
 						<a href="/chat" id="chat_<%- contato.email %>">Conversar</a>
 					</td>
 				</tr>
 			<% }) %>
 		</tbody>
 	</table>
+  </section>
 </section>
 <% include notify_script %>
 <% include ../exit %>

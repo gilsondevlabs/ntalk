@@ -1,9 +1,19 @@
 module.exports = function(io) {
 	var crypto = require('crypto');
+	var redis = require('redis').createClient();
 	var sockets = io.sockets;
 	sockets.on('connection', function(client) {
 		var session = client.handshake.session;
 		var usuario = session.usuario;
+
+		redis.sadd('onlines', usuario.email, function(erro) {
+			redis.smembers('onlines', function(erro, emails) {
+				emails.forEach(function() {
+					client.emit('notify-onlines', email);
+					client.broadcast.emit('notify-onlines', email);
+				});
+			});
+		});
 
 		client.on('join', function(sala) {
 			if(!sala) {
@@ -13,17 +23,33 @@ module.exports = function(io) {
 			}
 			session.sala = sala;
 			client.join(sala);
+
+			var msg = "<b>" + usuario.nome + ":</b> entrou.<br>";
+			redis.lpush(sala, msg, function(erro, res) {
+				redis.lrange(sala, 0, -1, function(erro, msgs) {
+					msgs.forEach(function(msg) {
+						sockets.in(sala).emit('send-client', msg);
+					});
+				});
+			});
 		});
 
 		client.on('send-server', function(msg) {
 			var sala = session.sala;
 			var data = {email: usuario.email, sala: sala};
 			msg = "<b>" + usuario.nome + ":</b>" + msg + "<br/>";
+			redis.lpush(sala, msg);
 			client.broadcast.emit('new-message', data);
 			sockets.in(sala).emit('send-client', msg);
 		});
 
 		client.on('disconnect', function() {
+			var sala = session.sala;
+			var msg = "<b>" + usuario.nome + ":</b> saiu.<br/>";
+			redis.lpush(sala, msg);
+			client.broadcast.emit('notify-offlines', usuario.email);
+			sockets.in(sala).emit('send-client', msg);
+			redis.srem('onlines', usuario.email);
 			client.leave(session.sala);
 		});
 	});
