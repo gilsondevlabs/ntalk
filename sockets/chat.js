@@ -8,7 +8,7 @@ module.exports = function(io) {
 
 		redis.sadd('onlines', usuario.email, function(erro) {
 			redis.smembers('onlines', function(erro, emails) {
-				emails.forEach(function() {
+				emails.forEach(function(email) {
 					client.emit('notify-onlines', email);
 					client.broadcast.emit('notify-onlines', email);
 				});
