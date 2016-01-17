@@ -12,10 +12,6 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var cookie = cookieParser(SECRET);
 var store = new expressSession.MemoryStore();
-var mongoose = require('mongoose');
-
-global.db = mongoose.connect('mongodb://localhost:27017/ntalk');
-
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -62,3 +58,5 @@ app.use(error.serverError);
 server.listen(3000, function() {
 	console.log("Ntalk no ar");
 });
+
+module.exports = app;
