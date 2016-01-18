@@ -33,7 +33,7 @@ describe('No controller contatos', function() {
 			});
 
 			it('ao fazer DELETE /contato/1', function(done){
-				request.del('/contato/1').end(function(err, res) {
+				request.delete('/contato/1').end(function(err, res) {
 					res.headers.location.should.eql('/');
 					done();
 				});
@@ -64,7 +64,7 @@ describe('No controller contatos', function() {
 
 		it('deve retornar status 200 em GET /contatos', function(done) {
 			var req = request.get('/contatos');
-			req.cookie = cookie;
+			req.cookies = cookie;
 			req.end(function(err, res) {
 				res.status.should.eql(200);
 				done();
