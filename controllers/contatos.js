@@ -60,9 +60,6 @@ module.exports = function(app) {
 					res.redirect('/contatos');
 				});
 			});
-			var usuario = req.session.usuario;
-			usuario.contatos.splice(req.params.id, 1);
-			res.redirect('/contatos');
 		}
 	};
 	return ContatosController;
