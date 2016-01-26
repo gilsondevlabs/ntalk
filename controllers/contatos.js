@@ -47,6 +47,7 @@ module.exports = function(app) {
 				contato.nome = req.body.contato.nome;
 				contato.email = req.body.contato.email;
 				usuario.save(function() {
+					var test = "";
 					res.redirect('/contatos');
 				});
 			});
